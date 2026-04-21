@@ -1,9 +1,9 @@
 device: auto
 seed: 42
-epochs: 50
+epochs: 100  # под batch=512 ~850 шагов на 50 эпохах было мало; 100 эпох ≈ 1700 шагов
 batch_size: 512  # H100 80GB тянет; для MPS/CPU снизить до 256
 eval_batch_size: 512
-lr: 1.0e-3
+lr: 2.0e-3  # sqrt-scaling от 1e-3 под batch 128 → 512 (×2 = √4). Компенсирует увеличение батча
 weight_decay: 1.0e-2
 grad_clip_norm: 1.0
 eval_every: 200  # 0 → eval once per epoch
