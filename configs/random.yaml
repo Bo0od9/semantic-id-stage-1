@@ -1,0 +1,8 @@
+defaults:
+  - data: yambda
+  - trainer: default
+  - wandb: default
+  - _self_
+
+model_name: random
+run_name: random_seed${trainer.seed}

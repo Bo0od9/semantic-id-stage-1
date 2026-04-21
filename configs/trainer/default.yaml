@@ -1,0 +1,2 @@
+device: auto  # auto | cpu | cuda | mps
+seed: 42

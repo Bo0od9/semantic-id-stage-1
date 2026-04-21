@@ -1,0 +1,44 @@
+defaults:
+  - data: yambda
+  - trainer: sasrec
+  - wandb: default
+  - model: sasrec
+  - _self_
+
+model_name: sasrec_id
+item_source: trainable
+run_name: tune_sasrec_id
+
+# Тюнинг прогоняется на SASRec-ID; выбранные HP переносятся на SASRec-Content
+# без повторного тюнинга (eval_protocol §8, план §1.1-1.2).
+
+# Укорочение бюджета на время тюнинга: epochs=20 + patience=3.
+# Финальный multi-seed (42,43,44) гоняется отдельно на epochs=50, patience=5.
+trainer:
+  epochs: 20
+  early_stopping_patience: 3
+
+# WandB лучше выключить — иначе 40 триалов создадут 40 мусорных runs.
+wandb:
+  enabled: false
+
+tune:
+  study_name: sasrec_id_tune
+  n_trials: 40
+  # MedianPruner: отсекает триал, если на очередном eval его метрика ниже медианы
+  # уже отчитавшихся триалов на этом же шаге.
+  pruner:
+    n_startup_trials: 5     # первые 5 триалов не прунятся (набирается история)
+    n_warmup_steps: 1000    # внутри триала пруннинг активируется с этого global_step
+    interval_steps: 1       # проверять pruning на каждом eval-отчёте
+  sampler:
+    seed: 42                # детерминизм последовательности сэмплов TPE
+
+  # Пространство поиска (явно прописано в objective; здесь — для документации)
+  search_space_doc: |
+    lr             ~ log-uniform [3e-4, 3e-3]
+    weight_decay   ~ log-uniform [1e-4, 1e-1]
+    dropout        ~ uniform     [0.0, 0.3]
+    d_model        ~ {64, 128}
+    n_layers       ~ {2, 3}
+    max_seq_len    ~ {128, 200, 256}

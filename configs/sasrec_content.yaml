@@ -1,0 +1,10 @@
+defaults:
+  - data: yambda
+  - trainer: sasrec
+  - wandb: default
+  - model: sasrec
+  - _self_
+
+model_name: sasrec_content
+item_source: pretrained
+run_name: sasrec_content_seed${trainer.seed}

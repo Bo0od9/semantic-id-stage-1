@@ -1,0 +1,8 @@
+d_model: 64
+n_heads: 2
+n_layers: 2
+max_seq_len: 200
+dropout: 0.2
+dim_feedforward: null  # null → 4 * d_model
+layer_norm_eps: 1.0e-9
+init_range: 0.02

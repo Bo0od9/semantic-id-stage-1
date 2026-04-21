@@ -1,0 +1,17 @@
+device: auto
+seed: 42
+epochs: 50
+batch_size: 512  # H100 80GB тянет; для MPS/CPU снизить до 256
+eval_batch_size: 512
+lr: 1.0e-3
+weight_decay: 1.0e-2
+grad_clip_norm: 1.0
+eval_every: 200  # 0 → eval once per epoch
+early_stopping_patience: 5
+tuning_metric: ndcg@10
+log_every: 50
+num_workers: 8  # применяется только на CUDA; на MPS/CPU игнорируется. Подогнано под H100 (8–16 vCPU)
+cudnn_deterministic: false  # true → ~−15% throughput на CUDA, ценой нестрогого воспроизведения. Для 3 сидов mean±std не критично
+n_uniform_negatives: 4096
+init_temperature: 0.1
+max_n_pos_per_step: 8192  # 0 → disabled; защита от OOM на квадратичной in-batch logits (n_pos, n_pos)
