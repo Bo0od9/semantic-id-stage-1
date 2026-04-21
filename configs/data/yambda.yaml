@@ -1,0 +1,13 @@
+# Dataset configuration.
+# split_set: full | subsample_10pct | subsample_1pct
+# k_values: top-K cutoffs reported in every results table (eval_protocol §6)
+# metrics:  metric names registered in src.metrics.metrics.REGISTERED_METRIC_FN
+
+split_set: full
+k_values: [10, 100]
+metrics:
+  - recall
+  - ndcg
+  - hitrate
+  - coverage
+primary_k: 10  # K used for per-user Recall/NDCG tensors (Wilcoxon)

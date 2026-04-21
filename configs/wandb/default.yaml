@@ -1,0 +1,5 @@
+enabled: true
+project: semantic-user-ids
+entity: bod9-hse-university
+mode: online  # online | offline | disabled
+tags: []
