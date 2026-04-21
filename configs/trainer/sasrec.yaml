@@ -1,12 +1,12 @@
 device: auto
 seed: 42
-epochs: 100  # под batch=512 ~850 шагов на 50 эпохах было мало; 100 эпох ≈ 1700 шагов
-batch_size: 512  # H100 80GB тянет; для MPS/CPU снизить до 256
-eval_batch_size: 512
-lr: 2.0e-3  # sqrt-scaling от 1e-3 под batch 128 → 512 (×2 = √4). Компенсирует увеличение батча
+epochs: 100  # H100 быстрый — можно позволить больше эпох; early stopping (patience=5) остановит раньше, если сойдётся
+batch_size: 128  # SASRec чувствителен к крупным батчам: lr=2e-3 под bs=512 дал divergence (grad_norm до 74, loss растёт). Возврат к конфигурации из оригинального CPU-прогона
+eval_batch_size: 512  # eval можно крупнее — там нет градиентов и обновлений
+lr: 1.0e-3  # стандартный для SASRec; менять только если batch менять
 weight_decay: 1.0e-2
 grad_clip_norm: 1.0
-eval_every: 200  # 0 → eval once per epoch
+eval_every: 0  # 0 → eval once per epoch
 early_stopping_patience: 5
 tuning_metric: ndcg@10
 log_every: 50
@@ -14,4 +14,4 @@ num_workers: 8  # применяется только на CUDA; на MPS/CPU и
 cudnn_deterministic: false  # true → ~−15% throughput на CUDA, ценой нестрогого воспроизведения. Для 3 сидов mean±std не критично
 n_uniform_negatives: 4096
 init_temperature: 0.1
-max_n_pos_per_step: 8192  # 0 → disabled; защита от OOM на квадратичной in-batch logits (n_pos, n_pos)
+max_n_pos_per_step: 0  # 0 → disabled; защита от OOM на квадратичной in-batch logits (n_pos, n_pos)
